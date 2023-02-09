@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SchoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="courseID" />
+    </Key>
+    <Property Name="courseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="courseName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="credits" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Enrollments" Relationship="Self.FK_Enrollment_ToTable" FromRole="Course" ToRole="Enrollment" />
+    <Property Name="courseDescribtion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="price" Type="Int32" />
+    <Property Name="IsCourseActive" Type="Boolean" Nullable="false" />
+    <Property Name="level" Type="SchoolModel.CourseLevel" />
+    <Property Name="Rating" Type="SchoolModel.RatingCourse" />
+    <Property Name="Level2" Type="Int32" />
+    <NavigationProperty Name="CourseLevel" Relationship="SchoolModel.FK__Course__Level2__3C69FB99" FromRole="Course" ToRole="CourseLevel1" />
+  </EntityType>
+  <EntityType Name="Enrollment">
+    <Key>
+      <PropertyRef Name="EnrollmentID" />
+    </Key>
+    <Property Name="EnrollmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="courseID" Type="Int32" Nullable="false" />
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="Grade" Type="Decimal" Precision="4" Scale="1" />
+    <NavigationProperty Name="Course" Relationship="Self.FK_Enrollment_ToTable" FromRole="Enrollment" ToRole="Course" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Enrollment_ToTable_1" FromRole="Enrollment" ToRole="Student" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="LName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EnrollmentDate" Type="DateTime" Precision="3" />
+    <Property Name="imageBath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Enrollments" Relationship="Self.FK_Enrollment_ToTable_1" FromRole="Student" ToRole="Enrollment" />
+  </EntityType>
+  <Association Name="FK_Enrollment_ToTable">
+    <End Role="Course" Type="Self.Course" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="courseID" />
+      </Principal>
+      <Dependent Role="Enrollment">
+        <PropertyRef Name="courseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Enrollment_ToTable_1">
+    <End Role="Student" Type="Self.Student" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Enrollment">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SchoolEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Courses" EntityType="Self.Course" />
+    <EntitySet Name="Enrollments" EntityType="Self.Enrollment" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <AssociationSet Name="FK_Enrollment_ToTable" Association="Self.FK_Enrollment_ToTable">
+      <End Role="Course" EntitySet="Courses" />
+      <End Role="Enrollment" EntitySet="Enrollments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Enrollment_ToTable_1" Association="Self.FK_Enrollment_ToTable_1">
+      <End Role="Student" EntitySet="Students" />
+      <End Role="Enrollment" EntitySet="Enrollments" />
+    </AssociationSet>
+    <FunctionImport Name="funcGetCourseByTitle" IsComposable="true" ReturnType="Collection(SchoolModel.funcGetCourseByTitle_Result)">
+      <Parameter Name="title" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GetCourses" EntitySet="Courses" ReturnType="Collection(SchoolModel.Course)" />
+    <FunctionImport Name="InsertCourse">
+      <Parameter Name="title" Mode="In" Type="String" />
+      <Parameter Name="credits" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="CourseLevel1" EntityType="SchoolModel.CourseLevel1" />
+    <AssociationSet Name="FK__Course__Level2__3C69FB99" Association="SchoolModel.FK__Course__Level2__3C69FB99">
+      <End Role="CourseLevel1" EntitySet="CourseLevel1" />
+      <End Role="Course" EntitySet="Courses" />
+    </AssociationSet>
+  </EntityContainer>
+  <ComplexType Name="funcGetCourseByTitle_Result">
+    <Property Type="Int32" Name="courseID" Nullable="false" />
+    <Property Type="String" Name="courseName" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="credits" Nullable="false" />
+    <Property Type="String" Name="courseDescribtion" Nullable="true" />
+    <Property Type="Int32" Name="price" Nullable="true" />
+    <Property Type="Boolean" Name="IsCourseActive" Nullable="false" />
+    <Property Type="String" Name="level" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="GetCourses_Result">
+    <Property Type="Int32" Name="courseID" Nullable="false" />
+    <Property Type="String" Name="courseName" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="credits" Nullable="false" />
+    <Property Type="String" Name="courseDescribtion" Nullable="true" />
+    <Property Type="Int32" Name="price" Nullable="true" />
+    <Property Type="Boolean" Name="IsCourseActive" Nullable="false" />
+    <Property Type="String" Name="level" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <EnumType Name="CourseLevel" UnderlyingType="Byte">
+    <Member Name="Beginner" Value="1" />
+    <Member Name="Intermediate" Value="2" />
+    <Member Name="Advanced" Value="3" />
+  </EnumType>
+  <EnumType Name="RatingCourse" UnderlyingType="Byte">
+    <Member Name="Bad" Value="1" />
+    <Member Name="Good" Value="2" />
+    <Member Name="Excellant" Value="3" />
+  </EnumType>
+  <EntityType Name="CourseLevel1">
+    <Key>
+      <PropertyRef Name="CourseLevelId" />
+    </Key>
+    <Property Name="CourseLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="level" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Courses" Relationship="SchoolModel.FK__Course__Level2__3C69FB99" FromRole="CourseLevel1" ToRole="Course" />
+  </EntityType>
+  <Association Name="FK__Course__Level2__3C69FB99">
+    <End Type="SchoolModel.CourseLevel1" Role="CourseLevel1" Multiplicity="0..1" />
+    <End Type="SchoolModel.Course" Role="Course" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CourseLevel1">
+        <PropertyRef Name="CourseLevelId" />
+      </Principal>
+      <Dependent Role="Course">
+        <PropertyRef Name="Level2" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

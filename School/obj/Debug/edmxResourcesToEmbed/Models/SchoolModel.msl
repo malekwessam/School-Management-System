@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SchoolModelStoreContainer" CdmEntityContainer="SchoolEntities">
+    <EntitySetMapping Name="Courses">
+      <EntityTypeMapping TypeName="SchoolModel.Course">
+        <MappingFragment StoreEntitySet="Course">
+          <ScalarProperty Name="Level2" ColumnName="Level2" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="level" ColumnName="level" />
+          <ScalarProperty Name="IsCourseActive" ColumnName="IsCourseActive" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="courseDescribtion" ColumnName="courseDescribtion" />
+          <ScalarProperty Name="courseID" ColumnName="courseID" />
+          <ScalarProperty Name="courseName" ColumnName="courseName" />
+          <ScalarProperty Name="credits" ColumnName="credits" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Enrollments">
+      <EntityTypeMapping TypeName="SchoolModel.Enrollment">
+        <MappingFragment StoreEntitySet="Enrollment">
+          <ScalarProperty Name="EnrollmentID" ColumnName="EnrollmentID" />
+          <ScalarProperty Name="courseID" ColumnName="courseID" />
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="Grade" ColumnName="Grade" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Students">
+      <EntityTypeMapping TypeName="SchoolModel.Student">
+        <MappingFragment StoreEntitySet="Student">
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="fName" ColumnName="fName" />
+          <ScalarProperty Name="LName" ColumnName="LName" />
+          <ScalarProperty Name="EnrollmentDate" ColumnName="EnrollmentDate" />
+          <ScalarProperty Name="imageBath" ColumnName="imageBath" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="funcGetCourseByTitle" FunctionName="SchoolModel.Store.funcGetCourseByTitle">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SchoolModel.funcGetCourseByTitle_Result">
+          <ScalarProperty Name="courseID" ColumnName="courseID" />
+          <ScalarProperty Name="courseName" ColumnName="courseName" />
+          <ScalarProperty Name="credits" ColumnName="credits" />
+          <ScalarProperty Name="courseDescribtion" ColumnName="courseDescribtion" />
+          <ScalarProperty Name="price" ColumnName="price" />
+          <ScalarProperty Name="IsCourseActive" ColumnName="IsCourseActive" />
+          <ScalarProperty Name="level" ColumnName="level" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetCourses" FunctionName="SchoolModel.Store.GetCourses" />
+    <FunctionImportMapping FunctionImportName="InsertCourse" FunctionName="SchoolModel.Store.InsertCourse" />
+    <EntitySetMapping Name="CourseLevel1">
+      <EntityTypeMapping TypeName="SchoolModel.CourseLevel1">
+        <MappingFragment StoreEntitySet="CourseLevel">
+          <ScalarProperty Name="level" ColumnName="level" />
+          <ScalarProperty Name="CourseLevelId" ColumnName="CourseLevelId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

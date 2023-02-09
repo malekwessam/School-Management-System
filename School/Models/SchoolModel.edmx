@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SchoolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="courseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="credits" Type="int" Nullable="false" />
+          <Property Name="courseDescribtion" Type="nvarchar(max)" />
+          <Property Name="price" Type="int" />
+          <Property Name="IsCourseActive" Type="bit" Nullable="false" />
+          <Property Name="level" Type="tinyint" />
+          <Property Name="Rating" Type="tinyint" />
+          <Property Name="Level2" Type="int" />
+        </EntityType>
+        <EntityType Name="CourseLevel">
+          <Key>
+            <PropertyRef Name="CourseLevelId" />
+          </Key>
+          <Property Name="CourseLevelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="level" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Enrollment">
+          <Key>
+            <PropertyRef Name="EnrollmentID" />
+          </Key>
+          <Property Name="EnrollmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="courseID" Type="int" Nullable="false" />
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="Grade" Type="decimal" Precision="4" Scale="1" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EnrollmentDate" Type="datetime" />
+          <Property Name="imageBath" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK__Course__Level2__3C69FB99">
+          <End Role="CourseLevel" Type="Self.CourseLevel" Multiplicity="0..1" />
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseLevel">
+              <PropertyRef Name="CourseLevelId" />
+            </Principal>
+            <Dependent Role="Course">
+              <PropertyRef Name="Level2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Enrollment_ToTable">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseID" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="courseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Enrollment_ToTable_1">
+          <End Role="Student" Type="Self.Student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="funcGetCourseByTitle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="title" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="courseID" Type="int" Nullable="false" />
+                <Property Name="courseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+                <Property Name="credits" Type="int" Nullable="false" />
+                <Property Name="courseDescribtion" Type="nvarchar(max)" />
+                <Property Name="price" Type="int" />
+                <Property Name="IsCourseActive" Type="bit" Nullable="false" />
+                <Property Name="level" Type="varchar" MaxLength="50" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetCourses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="InsertCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="title" Type="varchar" Mode="In" />
+          <Parameter Name="credits" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="SchoolModelStoreContainer">
+          <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CourseLevel" EntityType="Self.CourseLevel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Enrollment" EntityType="Self.Enrollment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Course__Level2__3C69FB99" Association="Self.FK__Course__Level2__3C69FB99">
+            <End Role="CourseLevel" EntitySet="CourseLevel" />
+            <End Role="Course" EntitySet="Course" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Enrollment_ToTable" Association="Self.FK_Enrollment_ToTable">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="Enrollment" EntitySet="Enrollment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Enrollment_ToTable_1" Association="Self.FK_Enrollment_ToTable_1">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="Enrollment" EntitySet="Enrollment" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SchoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="courseID" />
+          </Key>
+          <Property Name="courseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="courseName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="credits" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Enrollments" Relationship="Self.FK_Enrollment_ToTable" FromRole="Course" ToRole="Enrollment" />
+          <Property Name="courseDescribtion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="price" Type="Int32" />
+          <Property Name="IsCourseActive" Type="Boolean" Nullable="false" />
+          <Property Name="level" Type="SchoolModel.CourseLevel" />
+          <Property Name="Rating" Type="SchoolModel.RatingCourse" />
+          <Property Name="Level2" Type="Int32" />
+          <NavigationProperty Name="CourseLevel" Relationship="SchoolModel.FK__Course__Level2__3C69FB99" FromRole="Course" ToRole="CourseLevel1" />
+        </EntityType>
+        <EntityType Name="Enrollment">
+          <Key>
+            <PropertyRef Name="EnrollmentID" />
+          </Key>
+          <Property Name="EnrollmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="courseID" Type="Int32" Nullable="false" />
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="Grade" Type="Decimal" Precision="4" Scale="1" />
+          <NavigationProperty Name="Course" Relationship="Self.FK_Enrollment_ToTable" FromRole="Enrollment" ToRole="Course" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Enrollment_ToTable_1" FromRole="Enrollment" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EnrollmentDate" Type="DateTime" Precision="3" />
+          <Property Name="imageBath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Enrollments" Relationship="Self.FK_Enrollment_ToTable_1" FromRole="Student" ToRole="Enrollment" />
+        </EntityType>
+        <Association Name="FK_Enrollment_ToTable">
+          <End Role="Course" Type="Self.Course" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="courseID" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="courseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Enrollment_ToTable_1">
+          <End Role="Student" Type="Self.Student" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Enrollment" Type="Self.Enrollment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="Enrollment">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SchoolEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Courses" EntityType="Self.Course" />
+          <EntitySet Name="Enrollments" EntityType="Self.Enrollment" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <AssociationSet Name="FK_Enrollment_ToTable" Association="Self.FK_Enrollment_ToTable">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Enrollment" EntitySet="Enrollments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Enrollment_ToTable_1" Association="Self.FK_Enrollment_ToTable_1">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="Enrollment" EntitySet="Enrollments" />
+          </AssociationSet>
+          <FunctionImport Name="funcGetCourseByTitle" IsComposable="true" ReturnType="Collection(SchoolModel.funcGetCourseByTitle_Result)">
+          <Parameter Name="title" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetCourses" EntitySet="Courses" ReturnType="Collection(SchoolModel.Course)" />
+          <FunctionImport Name="InsertCourse">
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="credits" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="CourseLevel1" EntityType="SchoolModel.CourseLevel1" />
+          <AssociationSet Name="FK__Course__Level2__3C69FB99" Association="SchoolModel.FK__Course__Level2__3C69FB99">
+            <End Role="CourseLevel1" EntitySet="CourseLevel1" />
+            <End Role="Course" EntitySet="Courses" />
+          </AssociationSet>
+        </EntityContainer>
+        <ComplexType Name="funcGetCourseByTitle_Result">
+          <Property Type="Int32" Name="courseID" Nullable="false" />
+          <Property Type="String" Name="courseName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="credits" Nullable="false" />
+          <Property Type="String" Name="courseDescribtion" Nullable="true" />
+          <Property Type="Int32" Name="price" Nullable="true" />
+          <Property Type="Boolean" Name="IsCourseActive" Nullable="false" />
+          <Property Type="String" Name="level" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetCourses_Result">
+          <Property Type="Int32" Name="courseID" Nullable="false" />
+          <Property Type="String" Name="courseName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="credits" Nullable="false" />
+          <Property Type="String" Name="courseDescribtion" Nullable="true" />
+          <Property Type="Int32" Name="price" Nullable="true" />
+          <Property Type="Boolean" Name="IsCourseActive" Nullable="false" />
+          <Property Type="String" Name="level" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <EnumType Name="CourseLevel" UnderlyingType="Byte">
+          <Member Name="Beginner" Value="1" />
+          <Member Name="Intermediate" Value="2" />
+          <Member Name="Advanced" Value="3" />
+        </EnumType>
+        <EnumType Name="RatingCourse" UnderlyingType="Byte">
+          <Member Name="Bad" Value="1" />
+          <Member Name="Good" Value="2" />
+          <Member Name="Excellant" Value="3" />
+        </EnumType>
+        <EntityType Name="CourseLevel1">
+          <Key>
+            <PropertyRef Name="CourseLevelId" />
+          </Key>
+          <Property Name="CourseLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="level" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Courses" Relationship="SchoolModel.FK__Course__Level2__3C69FB99" FromRole="CourseLevel1" ToRole="Course" />
+        </EntityType>
+        <Association Name="FK__Course__Level2__3C69FB99">
+          <End Type="SchoolModel.CourseLevel1" Role="CourseLevel1" Multiplicity="0..1" />
+          <End Type="SchoolModel.Course" Role="Course" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseLevel1">
+              <PropertyRef Name="CourseLevelId" />
+            </Principal>
+            <Dependent Role="Course">
+              <PropertyRef Name="Level2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SchoolModelStoreContainer" CdmEntityContainer="SchoolEntities">
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="SchoolModel.Course">
+              <MappingFragment StoreEntitySet="Course">
+                <ScalarProperty Name="Level2" ColumnName="Level2" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="level" ColumnName="level" />
+                <ScalarProperty Name="IsCourseActive" ColumnName="IsCourseActive" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="courseDescribtion" ColumnName="courseDescribtion" />
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+                <ScalarProperty Name="courseName" ColumnName="courseName" />
+                <ScalarProperty Name="credits" ColumnName="credits" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Enrollments">
+            <EntityTypeMapping TypeName="SchoolModel.Enrollment">
+              <MappingFragment StoreEntitySet="Enrollment">
+                <ScalarProperty Name="EnrollmentID" ColumnName="EnrollmentID" />
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="SchoolModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="fName" ColumnName="fName" />
+                <ScalarProperty Name="LName" ColumnName="LName" />
+                <ScalarProperty Name="EnrollmentDate" ColumnName="EnrollmentDate" />
+                <ScalarProperty Name="imageBath" ColumnName="imageBath" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="funcGetCourseByTitle" FunctionName="SchoolModel.Store.funcGetCourseByTitle">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolModel.funcGetCourseByTitle_Result">
+                <ScalarProperty Name="courseID" ColumnName="courseID" />
+                <ScalarProperty Name="courseName" ColumnName="courseName" />
+                <ScalarProperty Name="credits" ColumnName="credits" />
+                <ScalarProperty Name="courseDescribtion" ColumnName="courseDescribtion" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="IsCourseActive" ColumnName="IsCourseActive" />
+                <ScalarProperty Name="level" ColumnName="level" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCourses" FunctionName="SchoolModel.Store.GetCourses">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InsertCourse" FunctionName="SchoolModel.Store.InsertCourse" />
+          <EntitySetMapping Name="CourseLevel1">
+            <EntityTypeMapping TypeName="SchoolModel.CourseLevel1">
+              <MappingFragment StoreEntitySet="CourseLevel">
+                <ScalarProperty Name="level" ColumnName="level" />
+                <ScalarProperty Name="CourseLevelId" ColumnName="CourseLevelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
