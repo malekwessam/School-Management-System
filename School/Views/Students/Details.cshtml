@@ -1,0 +1,96 @@
+﻿@model School.Models.Student
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @*@Html.DisplayNameFor(model => model.fName)*@
+            Full Name
+            <br />
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fName) @Html.DisplayFor(model => model.LName)
+            <br />
+        </dd>
+
+        <dt>
+            @*@Html.DisplayNameFor(model => model.LName)*@
+            <br />
+        </dt>
+
+        <dd>
+            @*@Html.DisplayFor(model => model.LName)*@
+            <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnrollmentDate)
+            <br />
+            <br />
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnrollmentDate)
+            <br />
+            <br />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.imageBath)
+            <br />
+        </dt>
+
+
+        <dd>
+            @if (Model.imageBath != null)
+            {
+                <div class="imageBath-size">
+                    <img src="~/Images/Profile/@Model.imageBath" alt="error" class="img-responsive image-center" width="50" height="50" />
+                </div>
+            }
+            else
+            {
+                <img src="~/Images/Profile/no-user.png" width="50" height="50" />
+            }
+            <br />
+        </dd>
+
+    </dl>
+</div>
+<br />
+@*<table class="table table-condensed table-responsive">
+    <tr>
+        <td> Title   </td>
+        <td> Credits   </td>
+        <td> Grade   </td>
+    </tr>
+    @foreach (var item in Model.Enrollments)
+    {
+        <tr>
+            <td>@item.Course.courseName  </td>
+            <td> @item.Course.credits   </td>
+            <td> @item.Grade   </td>
+        </tr>
+    }
+</table>*@
+@foreach (var item in Model.Enrollments)
+{
+<div class="panel panel-info">
+    <div class="panel-heading">@item.Course.courseName - @item.Course.credits hour(s)</div>
+    <div class="panel-body">Grade: @item.Grade 
+        <p> @Html.ActionLink("Edit","Edit","Enrollments" ,new {id=item.EnrollmentID },null)</p>
+    </div>
+</div>
+}
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

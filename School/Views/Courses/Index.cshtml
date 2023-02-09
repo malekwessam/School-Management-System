@@ -1,0 +1,179 @@
+﻿@model IEnumerable<School.Models.Course>
+
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .glyphicon {
+        color: goldenrod;
+        text-shadow: 0 0 black, 0 0 black, 0 0 black;
+    }
+</style>
+
+
+<h2>All Courses</h2>
+
+<p>
+    @*@Html.ActionLink("Create New", "Create")*@
+    <a data-toggle="modal" href="@Url.Action("GetPartialNewCourse","Courses")" data-target="#myModal">Create New Course</a>   |
+    @Html.ActionLink("Export to Excel", "ExportToExcel", "Courses", new { id = "ExcelDownloadToast" })
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+</p>
+@if (!Model.Any())
+{
+    <h4 class="label-default">There Is No Data To Show!</h4>
+}
+else
+{
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css" />
+
+
+
+
+
+
+
+    <table id="myTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.courseName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Level2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.credits)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.courseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseLevel.level)
+                    </td>
+                    <td>
+
+                        @for (int i = 0; i < 3; i++)
+                        {
+                            <span class="glyphicon glyphicon-star"></span>
+                        }
+
+
+
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.credits)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.courseID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.courseID }) |
+                        @*@Html.ActionLink("Delete", "Delete", new { id = item.courseID })*@
+
+                        <a class="btn btn-danger" data-model-id="@item.courseID" onclick="Delete(this)"> Delete AJAX </a>
+
+                        <script>
+
+
+                            function Delete(obj) {
+
+                                swal({
+                                    title: 'Are you sure?',
+                                    text: "You won't be able to revert this!",
+                                    icon: 'warning'
+                                }).then((result) => {
+                                    if (result) {
+                                        var ele = $(obj);
+                                        var Id = ele.data("model-id");
+                                        var url = "/Courses/DeleteConfirmedJSON/" + Id;
+                                        $.ajax({
+                                            url: url,
+                                            type: "POST",
+
+                                            success: function () {
+
+                                                ele.closest("tr").remove();
+                                            },
+
+                                            error: function () {
+                                                toastr.error('Failed!');
+                                            }
+
+                                        });
+                                        toastr.success('Deleted!');
+                                    }
+                                })
+
+                            };
+
+                        </script>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<div id="accordion">
+    @foreach (var course in Model)
+    {
+        <div class="group">
+            <h3>@course.courseName</h3>
+            <div>
+                @foreach (var item in course.Enrollments)
+                {
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail">
+                            <img src="https://localhost:44329/Images/Profile/no-user.png"
+                                 style="width:200px;height:200px" alt="...">
+                            <div class="caption">
+
+                                <a href="/Students/Details/@Url.Content(item.StudentID.ToString())">
+                                    <h3 style="text-align:center">
+
+                                        @item.Student.Fullname
+                                    </h3>
+
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $('#ExcelDownloadToast').click(function () {
+          var a = '@TempData["ExcelDownload"]';
+        //alert(a);
+       if (a != '')
+            toastr.success(a, "School Management System");
+    });
+</script>

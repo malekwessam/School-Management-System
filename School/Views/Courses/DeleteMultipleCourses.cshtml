@@ -1,0 +1,122 @@
+﻿@model IEnumerable<School.Models.Course>
+
+@{
+    ViewBag.Title = "DeleteMultipleCourses";
+}
+
+<h2>DeleteMultipleCourses</h2>
+<script src="~/scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#parent").click(function () {
+            $(".child").prop("checked", this.checked);
+        });
+
+        $('.child').click(function () {
+            if ($('.child:checked').length == $('.child').length) {
+                $('#parent').prop('checked', true);
+            } else {
+                $('#parent').prop('checked', false);
+            }
+        });
+    });
+</script>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+    <br />
+    <br />
+        <a class="btn btn-danger" data-model-id="courseID" onclick="Delete(this)"> Delete AJAX </a>
+
+        <script>
+
+
+            function Delete(obj) {
+
+                swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning'
+                }).then((result) => {
+                    if (result) {
+                        var ele = $(obj);
+                        var Id = ele.data("model-id");
+                        var url = "/Courses/DeleteConfirmedJSON/" + Id;
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+
+                            success: function () {
+
+                                ele.closest("tr").remove();
+                            },
+
+                            error: function () {
+                                toastr.error('Failed!');
+                            }
+
+                        });
+                        toastr.success('Deleted!');
+                    }
+                })
+
+            };
+
+        </script>
+    
+</p>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css" />
+
+@using (Html.BeginForm("DeleteMultipleCourses", "Courses", FormMethod.Post))
+{
+    @*<button type="submit" value="Delete"
+                class="btn btn-sm btn-danger rounded-0"
+                onclick="return confirm('Are you sure?')">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+        </button>*@
+
+    
+
+    
+
+    <table class="table">
+        <tr>
+           
+            <th><input type="checkbox" id="parent" class="custom-checkbox" /></th>
+            <th>
+                @Html.DisplayNameFor(model => model.courseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.credits)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" name="ID" value="@item.courseID"
+                           class="custom-checkbox child" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.courseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.credits)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.courseID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.courseID })
+                    @*@Html.ActionLink("Delete", "Delete", new { id = item.courseID })*@
+
+                </td>
+            </tr>
+        }
+
+    </table>
+}

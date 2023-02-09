@@ -1,0 +1,41 @@
+﻿
+@using School.Models
+
+@{
+    var CourseStats = (List<CourseStats>)ViewBag.CourseStats;
+    var StudentStats = (List<StudentStats>)ViewBag.stdsTop;
+}
+
+
+@if (CourseStats != null && StudentStats != null)
+{
+    <h3>  Best Students </h3>
+    <h4> Number of Courses: @CourseStats.Count()</h4>
+
+    <br />
+
+    foreach (var std in StudentStats)
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <b>Full Name:</b>  @std.FullName
+                <br />
+                <b> Number of Coures: </b>  @std.NomberOfCourses course(s)
+                <br />
+                <b>Average:</b>  @string.Format("{0:n2}", @std.AverageGrade)
+            </div>
+            <div class="col-md-4">
+                <a href="/Students/details/@Url.Content(std.StudentID.ToString())">
+                    <img style="width:75px;height:75px;" src="~/Images/Profile/no-user.png" />
+                </a>
+            </div>
+
+        </div>
+
+        <hr />
+    }
+}
+else
+{
+    <h3> No data to display!</h3>
+}

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<School.Models.Enrollment>
+@{
+    ViewBag.Title = "Students In Course";
+}
+
+<h2>Students In @Request.QueryString["CourseTitle"]</h2>
+
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <!--<div class="col-sm-6 col-md-4">
+            <div class="thumbnail">
+
+                <img src="https://localhost:44329/Images/Profile/no-user.png" alt="" style="width:200px;height:200px">-->
+
+
+        @*<img src="~/Images/Profile/@item.Student.imageBath" alt="">*@
+        <!--<div class="caption">
+                    <h3 style="text-align:center">
+                        @item.Student.Fullname
+
+                    </h3>
+
+                </div>
+            </div>
+        </div>-->
+
+
+        <section>
+
+            <div class="mask d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center text-center">
+                        <div class="col-md-4 mb-4 mb-md-0">
+                            <div class="card mask-custom-1 py-5 text-white">
+                                <div class="card-body">
+                                    <img class="rounded-circle shadow-2-strong mb-5"
+                                         src="https://localhost:44329/Images/Profile/no-user.png" alt="avatar" style="width: 200px; height:200px"
+                                         data-mdb-toggle="animation" data-mdb-animation-start="onLoad" data-mdb-animation="slide-in-left"
+                                         data-mdb-animation-duration="1000" data-mdb-animation-delay="200">
+                                    <h5 class="mb-4" data-mdb-toggle="animation" data-mdb-animation-start="onLoad"
+                                        data-mdb-animation="slide-in-left" data-mdb-animation-duration="1000"
+                                        data-mdb-animation-delay="300">
+                                        
+                                        @Html.ActionLink(@item.Student.Fullname, "Edit", new { id = item.EnrollmentID})
+                                    </h5>
+                                    <p class="mb-4" data-mdb-toggle="animation" data-mdb-animation-start="onLoad"
+                                       data-mdb-animation="slide-in-left" data-mdb-animation-duration="1000"
+                                       data-mdb-animation-delay="400">
+                                        BackEnd Developer
+                                    </p>
+                                    <ul class="list-unstyled mb-0" data-mdb-toggle="animation" data-mdb-animation-start="onLoad"
+                                        data-mdb-animation="slide-in-left" data-mdb-animation-duration="1000"
+                                        data-mdb-animation-delay="500">
+                                        <a href="https://github.com/" class="px-1">
+                                            <i class="fab fa-github text-white"></i>
+                                        </a>
+                                        <a href="https://twitter.com/i/flow/login" class="px-1">
+                                            <i class="fab fa-twitter text-white"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/login/ar" class="px-1">
+                                            <i class="fab fa-linkedin-in text-white"></i>
+                                        </a>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    }
+</div>
+
+

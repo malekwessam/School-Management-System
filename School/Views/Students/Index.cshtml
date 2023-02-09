@@ -1,0 +1,84 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<School.Models.Student>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>All Students</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@if (!Model.Any())
+{
+    <h4 class="label-default">There Is No Data To Show!</h4>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.fName)*@
+                @*Full Name*@
+                fName
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.LName)*@
+                LName
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.EnrollmentDate)*@
+                EnrollmentDate
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.imageBath)*@
+                Student Image
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fName)
+                    @*@item.fName @item.LName*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LName)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.EnrollmentDate)*@
+                    @if (item.EnrollmentDate != null)
+                    {
+                        @Convert.ToDateTime(item.EnrollmentDate).ToString("ddd MMM yyyy")
+                    }
+                </td>
+
+                <td>
+                    @if (item.imageBath != null)
+                    {
+                        <div class="imageBath-size">
+                            <img src="~/Images/Profile/@item.imageBath" alt="error" class="img-responsive image-center" width="50" height="50" />
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="~/Images/Profile/no-user.png" width="50" height="50" />
+                    }
+
+
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.StudentID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.StudentID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StudentID })
+                </td>
+            </tr>
+        }
+
+    </table>
+    @Html.PagedListPager(Model,page=>Url.Action("Index", new {page}))
+}
